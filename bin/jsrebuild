@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+unless $LOAD_PATH.include?(File.dirname(__FILE__) + '/../lib')
+  $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib')
+end
+
+require 'jsrebuild'
+
+# Add some options handling in here. Configurable options should include:
+# - Watch dir
+# - Jake options such as forced rebuilds
+# - Watch interval 
+
+watch_dir    = ARGV[0] || Dir.getwd
+interval     = 1
+jake_options = {}
+
+runner = JSRebuild::Runner.new(watch_dir, interval, jake_options)
+
+runner.run!
