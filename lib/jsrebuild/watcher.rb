@@ -82,14 +82,16 @@ module JSRebuild
     include Eventful
     
     def initialize(path, interval = 0)
-      @ctime = File.ctime(path)
+      @ctime = File.ctime(path) if File.exists?(path)
       super
     end
     
     def on_change
+      fire(:change) and return unless File.exists?(path)
+      
       ctime = File.ctime(path)
       
-      if ctime > @ctime
+      if @ctime.nil? || ctime > @ctime
         @ctime = ctime
         fire(:change)
       end
