@@ -2,7 +2,9 @@ module JSRebuild
   class Watcher
     include Eventful
     
-    def initialize(config)
+    def initialize(interval = 0.5, config)
+      puts interval
+      @interval       = interval
       @config         = config
       @loop           = nil
       @watchers       = nil
@@ -18,8 +20,8 @@ module JSRebuild
       
       @loop            = Coolio::Loop.default
       
-      @config_watcher  = FileWatcher.new(config_file, 0.5)
-      @helper_watcher  = FileWatcher.new(helper_file, 0.5)
+      @config_watcher  = FileWatcher.new(config_file, @interval)
+      @helper_watcher  = FileWatcher.new(helper_file, @interval)
       
       @config_watcher.on :change do
         fire(:config_change, config_file)
@@ -48,7 +50,7 @@ module JSRebuild
       @source_watchers = {}
       
       @config.source_files.each do |file|
-        watcher = FileWatcher.new(file, 0.5)
+        watcher = FileWatcher.new(file, @interval)
         @source_watchers[file] = watcher
         
         watcher.on :change do

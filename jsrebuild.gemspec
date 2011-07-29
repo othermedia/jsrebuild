@@ -15,11 +15,10 @@ Gem::Specification.new do |s|
   s.add_dependency "cool.io",  ">= 1.0.0"
   s.add_dependency "eventful", ">= 1.0.0"
   s.add_dependency "jake",     ">= 1.0.1"
+  s.add_dependency "oyster",   ">= 0.9.5"
   
   s.executables = ["jsrebuild"]
   
   s.files       = %w(History.txt LICENCE README.md) +
                   Dir.glob("{bin,lib}/**/*")
-  
-  s.test_file   = "test/test_jsrebuild.rb"
 end

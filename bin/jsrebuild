@@ -1,19 +1,54 @@
 #!/usr/bin/env ruby
-unless $LOAD_PATH.include?(File.dirname(__FILE__) + '/../lib')
-  $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib')
-end
+jsrebuild_lib = File.dirname(__FILE__) + '/../lib'
+$LOAD_PATH.unshift(jsrebuild_lib) unless $LOAD_PATH.include?(jsrebuild_lib)
 
+require 'oyster'
 require 'jsrebuild'
 
-# Add some options handling in here. Configurable options should include:
-# - Watch dir
-# - Jake options such as forced rebuilds
-# - Watch interval 
+spec = Oyster.spec do
+  name "jsrebuild -- dynamic rebuilder for JavaScript projects"
+  
+  synopsis <<-EOS
+    jsrebuild [--force] [--interval TIME] [DIR]
+  EOS
+  
+  description <<-EOS
+    Dynamically runs the Jake build tool to rebuild JavaScript
+    projects in development environments.
+  EOS
+  
+  flag  :force,    :default => false,
+        :desc => "Force a rebuild of all files when any change is made"
+  
+  float :interval, :default => 0.5,
+        :desc => <<-EOS
+          Set the frequency (in seconds) with which files are checked for
+          modifications.
+        EOS
+  
+  author "Benedict Eastaugh <benedict@eastaugh.net>"
+end
 
-watch_dir    = ARGV[0] || Dir.getwd
-interval     = 1
-jake_options = {}
+begin; opts = spec.parse
+rescue Oyster::HelpRendered; exit
+end
 
-runner = JSRebuild::Runner.new(watch_dir, interval, jake_options)
+dir          = File.expand_path(opts[:unclaimed].first || '.')
+interval     = opts[:interval]
+jake_options = {
+  :force => opts[:force]
+}
 
+unless File.directory?(dir)
+  $stderr.puts "Directory \"#{dir}\" does not exist"
+  exit
+end
+
+
+unless File.readable?(dir)
+  $stderr.puts "Directory \"#{dir}\" is not readable"
+  exit
+end
+
+runner = JSRebuild::Runner.new(dir, interval, jake_options)
 runner.run!

@@ -4,7 +4,7 @@ module JSRebuild
       @dir          = Jake.path(dir || Dir.getwd)
       @jake_options = jake_options
       @config       = load_config!
-      @watcher      = Watcher.new(@config)
+      @watcher      = Watcher.new(interval, @config)
     end
     
     def rebuild!
@@ -12,17 +12,17 @@ module JSRebuild
       
       build.on(:file_created) do |build, pkg, build_type, path|
         size = (File.size(path) / 1024.0).ceil
-        puts LOG_FORMAT % [pkg.name, build_type, path.gsub(@dir, ''), "#{ size } kB"]
+        $stderr.puts LOG_FORMAT % [pkg.name, build_type, path.gsub(@dir, ''), "#{ size } kB"]
       end
       
       build.on(:file_not_changed) do |build, pkg, build_type, path|
-        puts LOG_FORMAT % [pkg.name, build_type, path.gsub(@dir, ''), 'UP-TO-DATE']
+        $stderr.puts LOG_FORMAT % [pkg.name, build_type, path.gsub(@dir, ''), 'UP-TO-DATE']
       end
       
       begin
         build.run!
       rescue => err
-        puts err.message + "\n" + (err.backtrace * "\n")
+        $stderr.puts err.message + "\n" + (err.backtrace * "\n")
       end
     end
     
