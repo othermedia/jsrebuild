@@ -19,6 +19,6 @@ Gem::Specification.new do |s|
   
   s.executables = ["jsrebuild"]
   
-  s.files       = %w(History.txt LICENCE README.md) +
-                  Dir.glob("{bin,lib}/**/*")
+  s.files       = Dir.glob("{bin,lib}/**/*") +
+                  %w(History.txt LICENSE README.md)
 end
