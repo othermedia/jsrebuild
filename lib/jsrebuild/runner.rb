@@ -56,6 +56,7 @@ module JSRebuild
     
     def exit!
       @watcher.stop
+      exit(true)
     end
   end
 end

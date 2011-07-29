@@ -29,8 +29,10 @@ spec = Oyster.spec do
   author "Benedict Eastaugh <benedict@eastaugh.net>"
 end
 
-begin; opts = spec.parse
-rescue Oyster::HelpRendered; exit
+begin
+    opts = spec.parse
+  rescue Oyster::HelpRendered
+    exit(true)
 end
 
 dir          = File.expand_path(opts[:unclaimed].first || '.')
@@ -41,13 +43,13 @@ jake_options = {
 
 unless File.directory?(dir)
   $stderr.puts "Directory \"#{dir}\" does not exist"
-  exit
+  exit(false)
 end
 
 
 unless File.readable?(dir)
   $stderr.puts "Directory \"#{dir}\" is not readable"
-  exit
+  exit(false)
 end
 
 runner = JSRebuild::Runner.new(dir, interval, jake_options)
