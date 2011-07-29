@@ -3,10 +3,7 @@ module JSRebuild
     include Eventful
     
     def initialize(config)
-      @config      = config
-      @config_file = config.config_file
-      @helper_file = config.helper_file
-      
+      @config         = config
       @loop           = nil
       @watchers       = nil
       @config_watcher = nil
@@ -21,17 +18,15 @@ module JSRebuild
       
       @loop            = Coolio::Loop.default
       
-      @config_watcher  = Coolio::StatWatcher.new(config_file, 0.5)
-      @helper_watcher  = Coolio::StatWatcher.new(helper_file, 0.5)
+      @config_watcher  = FileWatcher.new(config_file, 0.5)
+      @helper_watcher  = FileWatcher.new(helper_file, 0.5)
       
-      @config_watcher.on_change do
-        puts "changed config file"
+      @config_watcher.on :change do
         fire(:config_change, config_file)
         reattach_source_watchers
       end
       
-      @helper_watcher.on_change do
-        puts "changed helper file"
+      @helper_watcher.on :change do
         fire(:helper_change, helper_file)
         reattach_source_watchers
       end
@@ -53,10 +48,10 @@ module JSRebuild
       @source_watchers = {}
       
       @config.source_files.each do |file|
-        watcher = Coolio::StatWatcher.new(file, 0.5)
-        @watchers[file] = watcher
+        watcher = FileWatcher.new(file, 0.5)
+        @source_watchers[file] = watcher
         
-        watcher.on_change do
+        watcher.on :change do
           fire(:source_change, file)
         end
         
@@ -79,6 +74,24 @@ module JSRebuild
       @helper_watcher.detach
       
       @loop.stop
+    end
+  end
+  
+  class FileWatcher < Coolio::StatWatcher
+    include Eventful
+    
+    def initialize(path, interval = 0)
+      @ctime = File.ctime(path)
+      super
+    end
+    
+    def on_change
+      ctime = File.ctime(path)
+      
+      if ctime > @ctime
+        @ctime = ctime
+        fire(:change)
+      end
     end
   end
 end

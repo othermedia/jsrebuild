@@ -14,5 +14,5 @@ builds:
 packages:
   fake:
     files:
-      - fake
-      - faker
+      - fake_core
+      - fake_ui
