@@ -3,7 +3,6 @@ module JSRebuild
     include Eventful
     
     def initialize(interval = 0.5, config)
-      puts interval
       @interval       = interval
       @config         = config
       @loop           = nil
