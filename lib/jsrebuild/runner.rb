@@ -8,6 +8,8 @@ module JSRebuild
     end
     
     def rebuild!
+      Jake::Build.delete_observers
+      
       build = Jake::Build.new(@dir, @jake_options)
       
       build.on(:file_created) do |build, pkg, build_type, path|
