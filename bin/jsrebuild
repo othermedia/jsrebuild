@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
-jsrebuild_lib = File.dirname(__FILE__) + '/../lib'
-$LOAD_PATH.unshift(jsrebuild_lib) unless $LOAD_PATH.include?(jsrebuild_lib)
+
+lib = File.dirname(__FILE__) + '/../lib'
+$:.unshift(lib) unless $:.include?(lib)
 
 require 'oyster'
 require 'jsrebuild'
