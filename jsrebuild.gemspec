@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   
   gem.license      = "BSD"
   
-  gem.add_dependency "cool.io",  ">= 1.0.0"
+  gem.add_dependency "cool.io",  ">= 1.1.0"
   gem.add_dependency "eventful", ">= 1.0.0"
   gem.add_dependency "jake",     ">= 1.0.1"
   gem.add_dependency "oyster",   ">= 0.9.5"

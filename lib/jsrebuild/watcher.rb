@@ -109,10 +109,10 @@ module JSRebuild
     
     # Notify any observers if either the file no longer exists, or if the file
     # has been modified since it was last checked.
-    def on_change
+    def on_change(prev, current)
       fire(:change) and return unless File.exists?(path)
       
-      ctime = File.ctime(path)
+      ctime = current.ctime
       
       if @ctime.nil? || ctime > @ctime
         @ctime = ctime
