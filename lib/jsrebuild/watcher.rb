@@ -101,23 +101,12 @@ module JSRebuild
   class FileWatcher < Coolio::StatWatcher
     include Eventful
     
-    # Set the watched file's ctime.
-    def initialize(path, interval = 0)
-      @ctime = File.ctime(path) if File.exists?(path)
-      super
-    end
-    
     # Notify any observers if either the file no longer exists, or if the file
     # has been modified since it was last checked.
     def on_change(prev, current)
       fire(:change) and return unless File.exists?(path)
       
-      ctime = current.ctime
-      
-      if @ctime.nil? || ctime > @ctime
-        @ctime = ctime
-        fire(:change)
-      end
+      fire(:change) if current.ctime > prev.ctime
     end
   end
 end
