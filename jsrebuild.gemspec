@@ -26,6 +26,5 @@ Gem::Specification.new do |gem|
   
   gem.executables  = ['jsrebuild']
   gem.require_path = 'lib'
-  gem.files        = Dir.glob("{bin,lib}/**/*") +
-                     %w(History.txt LICENSE README.md)
+  gem.files        = `git ls-files`.split(/\s+/)
 end
