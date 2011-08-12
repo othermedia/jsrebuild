@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   
   gem.summary      = "Dynamic rebuilder for JavaScript projects"
   gem.description  = "Dynamically runs the Jake build tool to rebuild JavaScript
-                      projects in development environmentgem.".sub(/\s+/, " ")
+                      projects in development environments.".sub(/\s+/, " ")
   
   gem.license      = "BSD"
   
